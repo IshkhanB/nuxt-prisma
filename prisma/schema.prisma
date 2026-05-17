@@ -8,39 +8,77 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model user {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  role  role    @default(USER)
-  name  String?
-  posts post[]
-  profile profile?
+  id                Int     @id @default(autoincrement())
+  email             String  @unique
+  role              role    @default(USER)
+  name              String?
+  posts             post[]
+  profile           profile?
 }
 
 model profile {
-  id     Int    @id @default(autoincrement())
-  bio    Json?
-  userId Int    @unique
-  user   user   @relation(fields: [userId], references: [id])
+  id                Int    @id @default(autoincrement())
+  bio               Json?
+  userId            Int    @unique
+  user              user   @relation(fields: [userId], references: [id])
 }
 
 model post {
-  id         Int     @id @default(autoincrement())
-  title      String
-  content    String?
-  data       Json?
-  published  Boolean @default(false)
-  authorId   Int
-  author     user    @relation(fields: [authorId], references: [id])
-  categories category[]
+  id                Int     @id @default(autoincrement())
+  title             String
+  content           String?
+  data              Json?
+  published         Boolean @default(false)
+  authorId          Int
+  author            user    @relation(fields: [authorId], references: [id])
+  categories        category[]
 }
 
 model category {
-  id    Int    @id @default(autoincrement())
-  name  String
-  posts post[]
+  id                Int    @id @default(autoincrement())
+  name              String
+  posts             post[]
+}
+
+model apartments {
+  id                Int   @id @default(autoincrement())
+  apartment         String @db.VarChar(2)
+  fio               String @db.VarChar(200)
+  area              Float
+  persent           Float  @default(0)
+}
+
+model costbyperiod {
+  id                Int   @id @default(autoincrement())
+  period            Int
+  electricity       Float
+  water             Float
+  gas               Float
+  sewerage          Float
+  sharedelectricity Float
+}
+
+model indications {
+  id                Int     @id @default(autoincrement())
+  period            Int
+  apartment         String  @db.VarChar(4)
+  fio               String  @db.VarChar(200)
+  electricity       Float
+  electricitylast   Float
+  coldwater         Float
+  coldwaterlast     Float
+  hotwater          Float
+  hotwaterlast      Float
+  heating           Float
+  donation          Float
+  arenda            Float   @default(0)
+  dop2              Float   @default(0)
+  nosharedel        Boolean @default(false)
+  comment           String  @db.VarChar(200)
 }
 
 enum role {
